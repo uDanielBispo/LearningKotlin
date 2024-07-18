@@ -121,13 +121,13 @@ fun ecercise4(){
 
 fun exercise5(){
     // Spected output:
-// Name: Amanda
-// Age: 33
-// Likes to play tennis. Doesn't have a referrer.
+    // Name: Amanda
+    // Age: 33
+    // Likes to play tennis. Doesn't have a referrer.
 
-// Name: Atiqah
-// Age: 28
-// Likes to climb. Has a referrer named Amanda, who likes to play tennis.
+    // Name: Atiqah
+    // Age: 28
+    // Likes to climb. Has a referrer named Amanda, who likes to play tennis.
 
 class Person(val name: String, val age: Int, val hobby: String?, val referrer: Person?) {
     fun showProfile() {
