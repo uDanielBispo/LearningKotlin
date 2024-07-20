@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -54,6 +53,12 @@ fun DiceWithButtonAndImage
             .fillMaxSize()
             .wrapContentSize(Alignment.Center)
     ) {
+
+        // o remember serve para guardara  informação, pois o composable pode ser resetado a-
+        // qualquer momento no sistema A função mutableStateOf() retorna um observável.
+        // Você aprenderá mais sobre observáveis posteriormente, mas por enquanto isso basicamente
+        // significa que quando o valor da variável de resultado muda, uma recomposição é acionada,
+        // o valor do resultado é refletido e a IU é atualizada.
         var result by remember { mutableStateOf(3) }
 
         var imageResource = when (result){
@@ -79,7 +84,10 @@ fun DiceWithButtonAndImage
 
             Button(
                 shape = RoundedCornerShape(5.dp),
-                onClick = { result = (1..6).random() },
+                onClick = {
+                    result = (1..6).random()
+                    println(result)
+                },
             ){
                 Text(
                     stringResource(id = R.string.roll),
