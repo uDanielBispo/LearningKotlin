@@ -18,6 +18,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,7 +33,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.lemonade.ui.theme.LemonadeTheme
-import java.util.stream.IntStream.range
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,44 +45,38 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-class LemonCard(val image: Int, val imageDescription: String, val message: String){
-    constructor(image: Int, imageDescription: String, message: String, tapTimes: Int) : this(
-        image = image,
-        imageDescription = imageDescription,
-        message = message
-    )
+class LemonCard(val image: Int, val imageDescription: String, val message: String, var tapTimes: Int){
 }
 
 val lemonCards: List<LemonCard> = listOf(
     LemonCard(
         image = R.drawable.lemon_tree,
         imageDescription = R.string.three_desc.toString(),
-        message = R.string.three_text.toString()
+        message = R.string.three_text.toString(),
+        tapTimes = 0
     ),
     LemonCard(
         image = R.drawable.lemon_squeeze,
         imageDescription = R.string.lemon_desc.toString(),
         message = R.string.tap_the_lemon.toString(),
-        tapTimes = 1
+        tapTimes = (2..4).random()
     ),
     LemonCard(
         image = R.drawable.lemon_drink,
         imageDescription = R.string.glass_with_lemon_juice_desc.toString(),
-        message = R.string.drink_lemon.toString()
+        message = R.string.drink_lemon.toString(),
+        tapTimes = 0
     ),
     LemonCard(
         image = R.drawable.lemon_restart,
         imageDescription = R.string.empty_glass_desc.toString(),
-        message = R.string.empty_glass.toString()
+        message = R.string.empty_glass.toString(),
+        tapTimes = 0
     )
 )
-
 @Preview(showBackground = true)
 @Composable
 fun PageLayout() {
-
-
     Column(){
         Header()
         LemonadeContent()
@@ -106,6 +103,8 @@ fun Header(modifier: Modifier = Modifier){
 @Composable
 fun LemonadeContent(modifier: Modifier = Modifier){
     val imgBackg: Color = Color(0xFFD2E7DA)
+    var actualCard: Int by remember { mutableStateOf(0) }
+    var lemons = lemonCards.get(1).tapTimes
 
     Column(
         modifier = Modifier
@@ -117,21 +116,36 @@ fun LemonadeContent(modifier: Modifier = Modifier){
         Button(
             shape = RoundedCornerShape(30.dp),
             colors = ButtonDefaults.buttonColors(imgBackg),
-            onClick = {  }
+            onClick = {
+                when(actualCard){
+                    0 -> actualCard++
+                    1 -> if(lemons > 0){
+                        lemons--
+                        print(lemons)
+                    }else{
+                        actualCard++
+                        print(actualCard)
+                    }
+                    2 -> actualCard++
+                    else -> actualCard = 0
+                }
+            }
         ) {
             Image(
-                painter = painterResource(lemonCards.get(0).image),
-                contentDescription = stringResource(id = R.string.three_desc),
+                painter = painterResource(lemonCards.get(actualCard).image),
+                contentDescription = stringResource(id = lemonCards.get(actualCard).imageDescription.toInt()),
                 modifier = Modifier
                     .width(200.dp)
                     .height(230.dp),
             )
         }
         Text(
-            text = stringResource(id = R.string.three_text),
+            text = stringResource(id = lemonCards.get(actualCard).message.toInt()),
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(16.dp)
         )
     }
 }
+
+
 
